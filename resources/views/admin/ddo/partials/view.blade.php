@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <a href="{{ route('create.chart.of.account') }}" type="submit" class="btn btn-danger font-weight-medium rounded-pill px-4 mt-4">
+                            <a href="{{ route('expence.vouchers.all') }}" type="submit" class="btn btn-danger font-weight-medium rounded-pill px-4 mt-4">
                                 Back
                             </a>
                         </div>

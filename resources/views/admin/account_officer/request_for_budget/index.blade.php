@@ -77,7 +77,7 @@
                     columns: [
                     {data: 'id', name: 'id'},
                     {data: 'ddo_name', name: 'ddo_name'},
-                    {data: 'budget_price', name: 'budget_price'},
+                    {data: 'total', name: 'total'},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                     ]

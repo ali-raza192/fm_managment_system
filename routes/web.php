@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\adminProfileController;
 use App\Http\Controllers\Admin\deputyDirectorFinanceController;
 use App\Http\Controllers\admin\accountantOfficerController;
 use App\Http\Controllers\admin\chartOfAccountsController;
+use App\Http\Controllers\admin\expenseVouchersController;
+use App\Http\Controllers\admin\accountantController;
+use App\Http\Controllers\admin\roleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +61,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/approve/advance', 'approveAdvance')->name('approve.advance');
         Route::get('/deputy/director/approve/advance', 'deputyDirectorApprovedAdvance')->name('deputy.director.approve.advance');
         Route::get('/status/approve/advance/{id}', 'statusApprovedAdvance');
+
+        Route::get('view/expense/of/deputy/director', 'viewExpenceByDeputyDirector')->name('view.expense.voucher.of.deputy.director'); 
+        Route::get('lis/expense/voucher/of/depty/director', 'listExpenseVoucherOfDeputyDirector')->name('expense.vouchers.list.of.deputy.director');
+        Route::get('/approve/expense/voucher/by/deputy/director/{id}', 'approvedExpenseVoucherByDeputyDirector');
+        Route::get('/reject/expense/voucher/by/deputy/director/{id}', 'rejectExpenseVoucherByDeputyDirector');
     });
 
     // Accountant officer Controller all routes //
@@ -88,6 +96,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/requested/advance/edit/data/{id}', 'requestedAdvanceEditData');
         Route::post('update/requested/advance', 'updateRequestedAdvance')->name('update.data.of.requested.advance');
         Route::get('/delete/advance/{id}', 'deleteAdvance');
+
+        Route::get('view/expense/of/account/officer', 'viewExpenceByAccountOfficer')->name('view.expense.voucher.of.account.officer');
+        Route::get('lis/expense/voucher/of/account/officer', 'listExpenseVoucherOfAccountOfficer')->name('expense.vouchers.list.of.account.officer');
+        Route::get('/approve/expense/voucher/by/account/officer/{id}', 'approvedExpenseVoucherByAccountOfficer');
+        Route::get('/reject/expense/voucher/by/account/officer/{id}', 'rejectExpenseVoucherByAccountOfficer');
     });
 
     // Chart Of Account Controller all routes //
@@ -101,6 +114,40 @@ Route::middleware('auth')->group(function () {
         Route::post('update/chart', 'updateChart')->name('update.charts');
         Route::get('/delete-data-of-chart-of-account/{id}', 'deleteChartOfAccount');
         Route::get('view/chart/of/account/{id}', 'viewChartOfAccount')->name('view.chart.of.account');
+
+        Route::get('view/expense/of/assistant/accountant', 'viewExpenceByAssistantAccountant')->name('view.expense.voucher.of.assistant.accountant');
+        Route::get('lis/expense/voucher/of/assistant/accountant', 'listExpenseVoucherOfAssistantAccountant')->name('expense.vouchers.list.of.assistant.accountant');
+        Route::get('/approve/expense/voucher/by/assistant/accountant/{id}', 'approvedExpenseVoucherByAssistantAccountant');
+        Route::get('/reject/expense/voucher/by/assistant/accountant/{id}', 'rejectExpenseVoucherByAssistantAccountant');
+    });
+
+    // Expense Voucher all routes //
+
+    Route::controller(expenseVouchersController::class)->group(function(){
+        Route::get('expense/vouchers', 'expenseVouchers')->name('expence.vouchers.all');
+        Route::get('list/expense/vouchers', 'listExpenseVouchers')->name('expense.vouchers.list');
+        Route::get('list/chart/{id}/account', 'listChartOfAccoun')->name('view.chart.of.account.for.expense');
+        Route::post('create/expense/voucher', 'createExpenseVoucher')->name('create.expense.voucher');
+    });
+
+    // Accountant all routes //
+
+    Route::controller(accountantController::class)->group(function(){
+        Route::get('view/expense/of/accountant', 'viewExpenceByAccountant')->name('view.expense.voucher.of.accountant');
+        Route::get('lis/expense/voucher/of/accountant', 'listExpenseVoucherOfAccountant')->name('expense.vouchers.list.of.accountant');
+        Route::get('/approve/expense/voucher/by/accountant/{id}', 'approvedExpenseVoucherByAccountant');
+        Route::get('/reject/expense/voucher/by/accountant/{id}', 'rejectExpenseVoucherByAccountant');
+    });
+
+    // All Routes of roles and permissions
+
+    Route::controller(roleController::class)->group(function(){
+        Route::get('all/permissions', 'permissionsAll')->name('permissions.all');
+        Route::post('store/permission', 'storePermission')->name('store.permission');
+        Route::get('all/roles', 'rolesAll')->name('roles.all');
+        Route::post('store/role', 'storeRole')->name('store.role');
+        Route::get('add/roles/and/permissions', 'addRolesAndPermissions')->name('add.roles.and.permissions');
+        Route::post('store/roles/and/permissions', 'storeRoleAndPermission')->name('store.role.and.permission');
     });
     
 });

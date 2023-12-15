@@ -28,6 +28,9 @@
                                                 </div>
                                             </td>
                                             <td>
+                                                <input type="text" class="form-control" name="chart_no" value="{{ $chartOfAccount->chart_no }}">
+                                            </td>
+                                            <td>
                                                 <h4 class="card-title mb-0"><button type="button" class="btn btn-success addEvent" style="float: right;" id="addEvent"><i class="mdi mdi-plus"></i></button></h4>
                                             </td>
                                         </tr>
@@ -122,6 +125,9 @@
                     ddo: {
                         required: true,
                     },
+                    chart_no: {
+                        required: true,
+                    },
                     'name[]': {
                         required: true,
                     },
@@ -133,6 +139,9 @@
                 messages: {
                     ddo: {
                         required: 'Please select DDO',
+                    },
+                    chart_no: {
+                        required: "Please Enter Chart NO",
                     },
                     'name[]': {
                         required: 'Please Enter Name',

@@ -25,6 +25,16 @@
                                                     </select>
                                                 </div>
                                             </td>
+                                            <td class="form-group">
+                                                <div style="display:flex; justify-content:space-between;">
+                                                    <div style="width: 400px">
+                                                        <input type="text" class="form-control" name="chart_no" placeholder="Chart No">
+                                                    </div>
+                                                    <div class="mt-2 text-info" style="font-size: 20px">
+                                                        <i class="mdi mdi-information-outline" data-bs-toggle="tooltip" data-bs-placement="top" title="If you create first chart of account for this DDO then enter chart 1"></i>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td>
                                                 <h4 class="card-title mb-0"><button type="button" class="btn btn-success" style="float: right;" id="addEvent"><i class="mdi mdi-plus"></i></button></h4>
                                             </td>
@@ -118,6 +128,9 @@
                     ddo: {
                         required: true,
                     },
+                    chart_no: {
+                        required: true,
+                    },
                     'name[]': {
                         required: true,
                     },
@@ -129,6 +142,9 @@
                 messages: {
                     ddo: {
                         required: 'Please select DDO',
+                    },
+                    chart_no: {
+                        required: "Please Enter Chart NO",
                     },
                     'name[]': {
                         required: 'Please Enter Name',
