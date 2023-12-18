@@ -15,12 +15,15 @@ use App\Models\assignAdvanceToDdo;
 use App\Models\expenseVouchers;
 use App\Models\chartOfAccountsDetails;
 use Auth;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class deputyDirectorFinanceController extends Controller
 {
     public function manageAccounts(){
         $users = User::latest()->get();
-        return view('admin.deputy_director_finance.index', compact('users'));
+        $roles = Role::all();
+        return view('admin.deputy_director_finance.index', compact('users', 'roles'));
     } /// End Method
 
     public function accountData(){
@@ -40,31 +43,46 @@ class deputyDirectorFinanceController extends Controller
     public function create(Request $request)
     {
         try {
+            // Check if the user with the provided email already exists
+            $existingUser = User::where('email', $request->email)->first();
 
-            $user = User::firstOrCreate(
-                ['email' => $request->email],
-                [
-                    'name' => $request->name,
-                    'last_name' => $request->last_name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'password' => Hash::make($request->password),
-                    'role' => $request->role,
-                    'address' => $request->address,
-                ]
-            );
+            if ($existingUser) {
+                // User with this email already exists
+                $notification = [
+                    'message' => 'This email is already taken.',
+                    'alert-type' => 'error',
+                ];
+            } else {
+                // Create a new user
+                $user = new User();
+                $user->name = $request->name;
+                $user->last_name = $request->last_name;
+                $user->email = $request->email;
+                $user->phone = $request->phone;
+                $user->password = Hash::make($request->password);
+                $user->role = $request->role;
+                $user->address = $request->address;
 
-            $notification = [
-                'message' => $user->wasRecentlyCreated ? 'User account created successfully!' : 'This email is already taken.',
-                'alert-type' => $user->wasRecentlyCreated ? 'success' : 'error',
-            ];
+                $user->save();
+
+                // Assign role if provided
+                if ($request->role) {
+                    $user->assignRole($request->role);
+                }
+
+                $notification = [
+                    'message' => 'User account created successfully!',
+                    'alert-type' => 'success',
+                ];
+            }
 
             return response()->json($notification);
         } catch (\Exception $e) {
             \Log::error('Error in create method:', ['message' => $e->getMessage(), 'trace' => $e->getTrace()]);
             return response()->json(['message' => 'An error occurred while creating the account.', 'alert-type' => 'error']);
         }
-    } /// End Method
+    }
+ /// End Method
 
     public function editUserData($id){
         $editUser = User::findOrFail($id);
@@ -86,20 +104,45 @@ class deputyDirectorFinanceController extends Controller
                 ];
                 return response()->json($notification);
             } else {
-                User::findOrFail($eId)->update([
-                    'name' => $request->name,
-                    'last_name' => $request->last_name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'password' => Hash::make($request->password),
-                    'role' => $request->role,
-                    'address' => $request->address,
-                ]);
-                $notification = [
-                    'message' => 'User account update successfully.',
-                    'alert-type' => 'success',
-                ];
-                return response()->json($notification);
+                if ($request->password) {
+                    $user = User::findOrFail($eId);
+                    $user->name = $request->name;
+                    $user->last_name = $request->last_name;
+                    $user->email = $request->email;
+                    $user->phone = $request->phone;
+                    $user->password = Hash::make($request->password);
+                    $user->role = $request->role;
+                    $user->address = $request->address;
+                    $user->save();
+                    $user->roles()->detach();
+                    if ($request->role) {
+                        $user->assignRole($request->role);
+                    }
+                    $notification = [
+                        'message' => 'User account update successfully.',
+                        'alert-type' => 'success',
+                    ];
+                    return response()->json($notification);
+                } else {
+                    $user = User::findOrFail($eId);
+                    $user->name = $request->name;
+                    $user->last_name = $request->last_name;
+                    $user->email = $request->email;
+                    $user->phone = $request->phone;
+                    $user->role = $request->role;
+                    $user->address = $request->address;
+                    $user->save();
+                    $user->roles()->detach();
+                    if ($request->role) {
+                        $user->assignRole($request->role);
+                    }
+                    $notification = [
+                        'message' => 'User account update successfully.',
+                        'alert-type' => 'success',
+                    ];
+                    return response()->json($notification);
+                }
+                
             }
         } catch (\Exception $e) {
             \Log::error('Error in create method:', ['message' => $e->getMessage(), 'trace' => $e->getTrace()]);

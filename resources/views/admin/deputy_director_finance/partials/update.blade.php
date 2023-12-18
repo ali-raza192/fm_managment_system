@@ -75,11 +75,9 @@
                     <label for="example-email" class="col-md-12">Role</label>
                     <div class="col-md-12">
                         <select name="role" id="role" class="form-control">
-                            <option value="deputy director finance">Deputy Director Finance</option>
-                            <option value="account officer">Account Officer</option>
-                            <option value="assistant account officer">Assistant Account Officer</option>
-                            <option value="accountant">Accountant</option>
-                            <option value="ddo">DDO</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
