@@ -17,6 +17,7 @@ use App\Models\chartOfAccountsDetails;
 use Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\chartOfAccounts;
 
 class deputyDirectorFinanceController extends Controller
 {
@@ -454,6 +455,79 @@ class deputyDirectorFinanceController extends Controller
         return response()->json([
             'Success' => 'Voucher Rejected Successfully!',
         ]);
+    } /// End Method
+
+    //- -------------------------------- Approve Chart Of accounts --------------------------------//
+
+    public function approveChartOfAccount(){
+        return view('admin.deputy_director_finance.approve_chart_of_account.index');
+    } /// End Method
+
+    public function listApproveChartOfAccount(Request $request){
+        $query = chartOfAccounts::with('ddoName')->where('status', 0);
+
+        return DataTables::of($query)
+            ->addColumn('ddo_name', function ($charts) {
+                $ddoName = $charts->ddoName ?? null;
+                return $ddoName ? $ddoName->name.' '.$ddoName->last_name : null;
+            })
+            ->addColumn('date', function ($charts) {
+                $date = $charts->created_at->format('d F Y');
+                return $date;
+            })
+            ->addColumn('status', function ($charts) {
+                $status = $charts->status;
+                if ($status == 1) {
+                    return '<span class="mb-1 badge font-weight-medium bg-light-warning text-warning">Approved</span>';
+                } else {
+                    return '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
+                }
+            })
+            ->addColumn('action', function ($charts) {
+                return '<a href="'.route("deputy.view.chart.of.account", $charts->id).'" class="btn btn-success btn-sm">View</a>
+                <a href="'.route("deputy.approve.chart.of.account", $charts->id).'" class="btn btn-warning btn-sm">Approve</a>
+                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$charts->id.'" id="delete-button">Reject</button>';
+            })
+            ->filter(function ($query) use ($request) {
+                if ($request->has('search') && !empty($request->input('search')['value'])) {
+                    $searchValue = $request->input('search')['value'];
+            
+                    $query->where(function ($subquery) use ($searchValue) {
+                        $subquery->where('id', 'like', '%'.$searchValue.'%')
+                            ->orWhereRaw("DATE_FORMAT(created_at, '%d %M %Y') LIKE ?", ['%'.$searchValue.'%'])
+                            ->orWhereHas('ddoName', function ($subsubquery) use ($searchValue) {
+                                $subsubquery->where('name', 'like', '%'.$searchValue.'%')
+                                    ->orWhere('last_name', 'like', '%'.$searchValue.'%');
+                            });
+                    });
+                }
+            })
+        ->rawColumns(['action', 'status'])
+        ->make(true);
+    } /// End Method
+
+    public function deputyApproveChartOfAccount($id){
+        chartOfAccounts::findOrFail($id)->update([
+            'status' => 1,
+            'updated_at' => Carbon::now(),
+        ]);
+        chartOfAccountsDetails::where('chart_id', $id)->update([
+            'status' => 1,
+            'updated_at' => Carbon::now(),
+        ]);
+        $notification = [
+            'message' => 'Status Approved Successfully!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->back()->with($notification);
+
+    } /// End Method
+
+    public function deputyViewChartOfAccount($id){
+        $ddos = assignDDOsToAccountant::with('ddoName')->where('status', 1)->orderBy('id', 'ASC')->get();
+        $chartOfAccount = chartOfAccounts::find($id);
+        $chartOfAccountDetails = chartOfAccountsDetails::where('chart_id', $id)->get();
+        return view('admin.deputy_director_finance.approve_chart_of_account.partials.view', compact('ddos', 'chartOfAccount', 'chartOfAccountDetails'));
     } /// End Method
 
 }

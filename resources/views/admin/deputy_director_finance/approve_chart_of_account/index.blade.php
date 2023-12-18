@@ -6,12 +6,12 @@
         <!-- ============================================================== -->
         <div class="row page-titles">
             <div class="col-md-5 col-12 align-self-center">
-            <h3 class="text-themecolor mb-0">Chart Of Accounts</h3>
+            <h3 class="text-themecolor mb-0">Approve Chart Of Accounts</h3>
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item">
                 <a href="{{ url('/dashboard') }}">Home</a>
                 </li>
-                <li class="breadcrumb-item active">Chart Of Accounts</li>
+                <li class="breadcrumb-item active">Approve Chart Of Accounts</li>
             </ol>
             </div>
         </div>
@@ -23,8 +23,7 @@
             <div class="col-12">
             <div class="card">
                 <div class="border-bottom title-part-padding">
-                <h4 class="card-title mb-0" style="float: left;">Chart Of Accounts</h4>
-                <h4 class="card-title mb-0" style="float: right;"><a href="{{ route('add.chart.of.accounts') }}" class="btn btn-success">Add</a></h4>
+                <h4 class="card-title mb-0">Approve Chart Of Accounts</h4>
                 </div>
                 <div class="card-body">
                 <div class="table-responsive">
@@ -64,7 +63,7 @@
                 dataTable = $('#dataTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: '{{ route('chart.of.accounts.list') }}',
+                    ajax: '{{ route('list.approve.chart.of.account') }}',
                     columns: [
                     {data: 'id', name: 'id'},
                     {data: 'ddo_name', name: 'ddo_name'},

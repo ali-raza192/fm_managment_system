@@ -153,7 +153,6 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
-                            console.log(response);
                             var type = response['alert-type'];
 
                             if (type === 'success') {

@@ -17,8 +17,8 @@ class expenseVouchersController extends Controller
 {
     public function expenseVouchers(){
         $budget = assignBudgetToDdo::where('ddo_id', auth()->user()->id)->first();
-        $charts = chartOfAccounts::where('ddo_id', auth()->user()->id)->get();
-        $expenses = chartOfAccountsDetails::where('ddo_id', auth()->user()->id)->get();
+        $charts = chartOfAccounts::where('ddo_id', auth()->user()->id)->where('status', 1)->get();
+        $expenses = chartOfAccountsDetails::where('ddo_id', auth()->user()->id)->where('status', 1)->get();
         return view('admin.ddo.index', compact('charts', 'expenses', 'budget'));
     } /// End Method
 

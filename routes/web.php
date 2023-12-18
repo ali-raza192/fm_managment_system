@@ -66,6 +66,13 @@ Route::middleware('auth')->group(function () {
         Route::get('lis/expense/voucher/of/depty/director', 'listExpenseVoucherOfDeputyDirector')->name('expense.vouchers.list.of.deputy.director');
         Route::get('/approve/expense/voucher/by/deputy/director/{id}', 'approvedExpenseVoucherByDeputyDirector');
         Route::get('/reject/expense/voucher/by/deputy/director/{id}', 'rejectExpenseVoucherByDeputyDirector');
+
+
+        Route::get('approve/chart/of/account', 'approveChartOfAccount')->name('approve.chart.of.account');
+        Route::get('list/approve/chart/of/account', 'listApproveChartOfAccount')->name('list.approve.chart.of.account');
+        Route::get('deputy/approve/chart/of/account/{id}', 'deputyApproveChartOfAccount')->name('deputy.approve.chart.of.account');
+        Route::get('deputy/view/chart/of/account/{id}', 'deputyViewChartOfAccount')->name('deputy.view.chart.of.account');
+
     });
 
     // Accountant officer Controller all routes //

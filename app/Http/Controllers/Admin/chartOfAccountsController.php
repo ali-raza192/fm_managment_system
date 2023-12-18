@@ -58,6 +58,14 @@ class chartOfAccountsController extends Controller
                 $date = $charts->created_at->format('d F Y');
                 return $date;
             })
+            ->addColumn('status', function ($charts) {
+                $status = $charts->status;
+                if ($status == 1) {
+                    return '<span class="mb-1 badge font-weight-medium bg-light-warning text-warning">Approved</span>';
+                } else {
+                    return '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
+                }
+            })
             ->addColumn('action', function ($charts) {
                 return '<a href="'.route("view.chart.of.account", $charts->id).'" class="btn btn-success btn-sm">View</a>
                 <a href="'.route("edit.chart.of.account", $charts->id).'" class="btn btn-warning btn-sm">Edit</a>
