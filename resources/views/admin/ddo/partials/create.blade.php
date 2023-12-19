@@ -28,8 +28,11 @@
                         <select name="expense" class="form-control">
                             <option value="">Please choose Expense</option>
                             @foreach ($charts as $chart)
+                            @php
+                                $expense_is = App\Models\chartOfAccountsDetails::where('chart_id', $chart->id)->where('ddo_id', auth()->user()->id)->where('status', 1)->get();
+                            @endphp
                                 <optgroup label="{{ $chart->chart_no }}" data-select2-id="select2-data-445-usob">
-                                    @foreach ($expenses as $expense)
+                                    @foreach ($expense_is as $expense)
                                         <option value="{{ $expense->id }}" data-select2-id="select2-data-446-ro5t">{{ $expense->name }} (RS {{ $expense->amount }})</option>
                                     @endforeach
                                 </optgroup>

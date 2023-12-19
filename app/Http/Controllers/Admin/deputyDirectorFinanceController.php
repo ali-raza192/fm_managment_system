@@ -240,7 +240,7 @@ class deputyDirectorFinanceController extends Controller
     } /// End Method
 
     public function approveBudget(){
-        $ddos = assignDDOsToAccountant::with('ddoName')->where('accountant_id', auth()->id())->where('status', 1)->get();
+        $ddos = assignDDOsToAccountant::with('ddoName')->where('status', 1)->get();
         return view('admin.deputy_director_finance.approve_budget.index', compact('ddos'));
     } /// ENd Method
 
@@ -286,14 +286,30 @@ class deputyDirectorFinanceController extends Controller
     }
 
     public function statusApproveBudget($id){
-        assignBudgetToDdo::findOrFail($id)->update([
-            'status' => 1,
-            'updated_at' => Carbon::now(),
-        ]);
-        $notification = [
-            'message' => 'Budget Approved successfully to this DDO!',
-            'alert-type' => 'success'
-        ];
+        $ifNewBudget = assignBudgetToDdo::find($id);
+        if ($ifNewBudget->new_budget == NULL) {
+            assignBudgetToDdo::findOrFail($id)->update([
+                'status' => 1,
+                'updated_at' => Carbon::now(),
+            ]);
+            $notification = [
+                'message' => 'Budget Approved successfully to this DDO!',
+                'alert-type' => 'success'
+            ];
+        } else {
+            assignBudgetToDdo::findOrFail($id)->update([
+                'total' => $ifNewBudget->new_budget + $ifNewBudget->total,
+                'new_budget' => null,
+                'status' => 1,
+                'updated_at' => Carbon::now(),
+            ]);
+            $notification = [
+                'message' => 'New Budget Approved successfully to this DDO!',
+                'alert-type' => 'success'
+            ];
+        }
+        
+        
 
         return response()->json($notification);
     } /// End Method
@@ -301,7 +317,7 @@ class deputyDirectorFinanceController extends Controller
     //- -------------------------------- Approve Advance ----------------------------------- -//
 
     public function approveAdvance(){
-        $ddos = assignDDOsToAccountant::with('ddoName')->where('accountant_id', auth()->id())->where('status', 1)->get();
+        $ddos = assignDDOsToAccountant::with('ddoName')->where('status', 1)->get();
         return view('admin.deputy_director_finance.approve_advance.index', compact('ddos'));
     } /// End Method
 
@@ -352,7 +368,7 @@ class deputyDirectorFinanceController extends Controller
         $budgetAmount = assignBudgetToDdo::where('ddo_id', $getadvance->ddo_id)->first();
         assignBudgetToDdo::where('ddo_id', $getadvance->ddo_id)->update([
             'advance' => $getadvance->advance,
-            'total' => $getadvance->advance + $budgetAmount->budget,
+            'total' => $getadvance->advance + $budgetAmount->total,
         ]);
         assignAdvanceToDdo::findOrFail($id)->update([
             'status' => 1,

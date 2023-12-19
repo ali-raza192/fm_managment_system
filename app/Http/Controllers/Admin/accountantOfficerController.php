@@ -169,35 +169,50 @@ class accountantOfficerController extends Controller
     //- ------------------------------- Send Request For budget --------------------------------------- - //
 
     public function sendRequestForBudget(){
-        $ddos = assignDDOsToAccountant::with('ddoName')->where('accountant_id', auth()->id())->where('status', 1)->get();
+        $ddos = assignDDOsToAccountant::with('ddoName')->where('status', 1)->get();
         return view('admin.account_officer.request_for_budget.index', compact('ddos'));
     } /// End Method
 
     public function createAssignedBudget(Request $request){
-        $existingRecord = assignBudgetToDdo::where('ddo_id', $request->ddo)->first();
+        $existingRecord = assignBudgetToDdo::where('ddo_id', $request->ddo)->where('status', 1)->first();
+        $existingRecordPending = assignBudgetToDdo::where('ddo_id', $request->ddo)->where('status', 0)->first();
     
         if ($existingRecord) {
+            assignBudgetToDdo::where('id', $existingRecord->id)->update([
+                'new_budget' => $request->budget,
+                'status' => 0,
+                'created_at' => now(),
+            ]);
             $notification = [
-                'message' => 'Budget request failed. Please Search DDO and assign new budget.',
+                'message' => 'New Budget Request Send Successfully.',
+                'alert-type' => 'success'
+            ];
+    
+            return response()->json($notification);
+        } else if($existingRecordPending) {
+            $notification = [
+                'message' => 'This DDO budget does not approved please first appoved or delete then add new budget request.',
                 'alert-type' => 'error'
             ];
     
             return response()->json($notification);
+        } else {
+            assignBudgetToDdo::insert([
+                'ddo_id' => $request->ddo,
+                'budget' => $request->budget,
+                'total' => $request->budget,
+                'created_at' => now(),
+            ]);
+        
+            $notification = [
+                'message' => 'Budget request sent successfully!',
+                'alert-type' => 'success'
+            ];
+        
+            return response()->json($notification);
         }
     
-        assignBudgetToDdo::insert([
-            'ddo_id' => $request->ddo,
-            'budget' => $request->budget,
-            'total' => $request->budget,
-            'created_at' => now(),
-        ]);
-    
-        $notification = [
-            'message' => 'Budget request sent successfully!',
-            'alert-type' => 'success'
-        ];
-    
-        return response()->json($notification);
+        
     }    
     
     public function requestedDDOList(Request $request){
@@ -213,8 +228,7 @@ class accountantOfficerController extends Controller
                 return $status == 1 ? '<span class="mb-1 badge font-weight-medium bg-light-success text-success">Approved</span>' : '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
             })
             ->addColumn('action', function ($ddo) {
-                return '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-edit-button-id="'.$ddo->id.'" id="edit-button">Edit</button>
-                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button>';
+                return '<div class="text-center"><button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {
@@ -286,7 +300,7 @@ class accountantOfficerController extends Controller
     } /// End Method
 
     public function sendRequestForAdvance(){
-        $ddos = assignDDOsToAccountant::with('ddoName')->where('accountant_id', auth()->id())->where('status', 1)->get();
+        $ddos = assignDDOsToAccountant::with('ddoName')->where('status', 1)->get();
         return view('admin.account_officer.request_for_advance.index', compact('ddos'));
     } /// End Method
 
@@ -303,8 +317,7 @@ class accountantOfficerController extends Controller
                 return $status == 1 ? '<span class="mb-1 badge font-weight-medium bg-light-success text-success">Approved</span>' : '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
             })
             ->addColumn('action', function ($ddo) {
-                return '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-edit-button-id="'.$ddo->id.'" id="edit-button">Edit</button>
-                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button>';
+                return '<div class="text-center"><button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {
@@ -334,11 +347,12 @@ class accountantOfficerController extends Controller
         $ddoId = $request->ddo;
         $newAdvance = $request->advance;
     
-        $existingData = assignAdvanceToDdo::where('ddo_id', $ddoId)->first();
+        $existingData = assignAdvanceToDdo::where('ddo_id', $ddoId)->where('status', 1)->first();
     
         if ($existingData) {
             $existingData->update([
-                'advance' => $existingData->advance + $newAdvance,
+                'advance' => $existingData->advance,
+                'status' => 0,
                 'created_at' => Carbon::now(),
             ]);
         } else {
