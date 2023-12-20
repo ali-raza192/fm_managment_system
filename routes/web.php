@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\accountantOfficerController;
 use App\Http\Controllers\Admin\chartOfAccountsController;
 use App\Http\Controllers\Admin\expenseVouchersController;
 use App\Http\Controllers\Admin\accountantController;
-use App\Http\ControllersAadmin\roleController;
+use App\Http\Controllers\Admin\roleController;
 
 /*
 |--------------------------------------------------------------------------
