@@ -4,11 +4,11 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\adminProfileController;
 use App\Http\Controllers\Admin\deputyDirectorFinanceController;
-use App\Http\Controllers\admin\accountantOfficerController;
-use App\Http\Controllers\admin\chartOfAccountsController;
-use App\Http\Controllers\admin\expenseVouchersController;
-use App\Http\Controllers\admin\accountantController;
-use App\Http\Controllers\admin\roleController;
+use App\Http\Controllers\Admin\accountantOfficerController;
+use App\Http\Controllers\Admin\chartOfAccountsController;
+use App\Http\Controllers\Admin\expenseVouchersController;
+use App\Http\Controllers\Admin\accountantController;
+use App\Http\ControllersAadmin\roleController;
 
 /*
 |--------------------------------------------------------------------------
