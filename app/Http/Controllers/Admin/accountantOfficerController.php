@@ -37,8 +37,8 @@ class accountantOfficerController extends Controller
                 return $status == 1 ? '<span class="mb-1 badge font-weight-medium bg-light-success text-success">Approved</span>' : '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
             })
             ->addColumn('action', function ($accountant) {
-                return '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-edit-button-id="'.$accountant->id.'" id="edit-button">Edit</button>
-                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$accountant->id.'" id="delete-button">Delete</button>';
+                return '<div class="text-center"><button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-edit-button-id="'.$accountant->id.'" id="edit-button">Edit</button>
+                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$accountant->id.'" id="delete-button">Delete</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {

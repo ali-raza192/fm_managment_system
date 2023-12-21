@@ -30,8 +30,8 @@ class deputyDirectorFinanceController extends Controller
     public function accountData(){
         return DataTables::of(User::query())
         ->addColumn('action', function ($user) {
-            return '<button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-edit-button-id="'.$user->id.'" id="edit-button">Edit</button>
-            <button class="btn btn-danger btn-sm" data-delete-button-id="'.$user->id.'" id="delete-button">Delete</button>';
+            return '<div class="text-center"><button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-edit-button-id="'.$user->id.'" id="edit-button">Edit</button>
+            <button class="btn btn-danger btn-sm" data-delete-button-id="'.$user->id.'" id="delete-button">Delete</button></div>';
         })
         ->rawColumns(['action'])
         ->make(true);
@@ -177,8 +177,8 @@ class deputyDirectorFinanceController extends Controller
                 return $status == 1 ? '<span class="mb-1 badge font-weight-medium bg-light-success text-success">Approved</span>' : '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
             })
             ->addColumn('action', function ($accountant) {
-                return '<button class="btn btn-success btn-sm" data-status-button-id="'.$accountant->accountant_id.'" id="status-button">Approve</button>
-                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-view-button-id="'.$accountant->id.'" id="view-button">View</button>';
+                return '<div class="text-center"><button class="btn btn-success btn-sm" data-status-button-id="'.$accountant->accountant_id.'" id="status-button">Approve</button>
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-view-button-id="'.$accountant->id.'" id="view-button">View</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {
@@ -257,9 +257,9 @@ class deputyDirectorFinanceController extends Controller
                 return $status == 1 ? '<span class="mb-1 badge font-weight-medium bg-light-success text-success">Approved</span>' : '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
             })
             ->addColumn('action', function ($ddo) {
-                return '<button class="btn btn-success btn-sm" data-status-button-id="'.$ddo->id.'" id="status-button">Approve</button>
+                return '<div class="text-center"><button class="btn btn-success btn-sm" data-status-button-id="'.$ddo->id.'" id="status-button">Approve</button>
                 <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-view-button-id="'.$ddo->id.'" id="view-button">View</button>
-                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button>';
+                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {
@@ -335,9 +335,9 @@ class deputyDirectorFinanceController extends Controller
                 return $status == 1 ? '<span class="mb-1 badge font-weight-medium bg-light-success text-success">Approved</span>' : '<span class="mb-1 badge font-weight-medium bg-light-danger text-danger">Pending</span>';
             })
             ->addColumn('action', function ($ddo) {
-                return '<button class="btn btn-success btn-sm" data-status-button-id="'.$ddo->id.'" id="status-button">Approve</button>
+                return '<div class="text-center"><button class="btn btn-success btn-sm" data-status-button-id="'.$ddo->id.'" id="status-button">Approve</button>
                 <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#bs-update-modal" data-view-button-id="'.$ddo->id.'" id="view-button">View</button>
-                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button>';
+                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$ddo->id.'" id="delete-button">Delete</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {
@@ -500,9 +500,9 @@ class deputyDirectorFinanceController extends Controller
                 }
             })
             ->addColumn('action', function ($charts) {
-                return '<a href="'.route("deputy.view.chart.of.account", $charts->id).'" class="btn btn-success btn-sm">View</a>
+                return '<div class="text-center"><a href="'.route("deputy.view.chart.of.account", $charts->id).'" class="btn btn-success btn-sm">View</a>
                 <a href="'.route("deputy.approve.chart.of.account", $charts->id).'" class="btn btn-warning btn-sm">Approve</a>
-                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$charts->id.'" id="delete-button">Reject</button>';
+                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$charts->id.'" id="delete-button">Reject</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {

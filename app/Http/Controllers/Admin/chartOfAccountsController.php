@@ -67,9 +67,9 @@ class chartOfAccountsController extends Controller
                 }
             })
             ->addColumn('action', function ($charts) {
-                return '<a href="'.route("view.chart.of.account", $charts->id).'" class="btn btn-success btn-sm">View</a>
+                return '<div class="text-center"><a href="'.route("view.chart.of.account", $charts->id).'" class="btn btn-success btn-sm">View</a>
                 <a href="'.route("edit.chart.of.account", $charts->id).'" class="btn btn-warning btn-sm">Edit</a>
-                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$charts->id.'" id="delete-button">Delete</button>';
+                <button class="btn btn-danger btn-sm" data-delete-button-id="'.$charts->id.'" id="delete-button">Delete</button></div>';
             })
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && !empty($request->input('search')['value'])) {
